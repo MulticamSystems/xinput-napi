@@ -1,5 +1,5 @@
 {
-  "name": "@aspect/xinput-napi",
+  "name": "xinput-napi",
   "version": "1.0.0",
   "description": "Native XInput bindings for Node.js/Electron - Xbox controller support on Windows",
   "main": "index.js",
