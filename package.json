@@ -1,0 +1,57 @@
+{
+  "name": "@aspect/xinput-napi",
+  "version": "1.0.0",
+  "description": "Native XInput bindings for Node.js/Electron - Xbox controller support on Windows",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "install": "node-gyp-build",
+    "build": "node-gyp rebuild",
+    "prebuild": "prebuildify --napi --strip",
+    "prebuild-electron": "prebuildify --napi --strip --electron",
+    "test": "node test.js"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "binding.gyp",
+    "src/",
+    "prebuilds/"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aspect/xinput-napi.git"
+  },
+  "keywords": [
+    "xbox",
+    "xinput",
+    "gamepad",
+    "controller",
+    "napi",
+    "native",
+    "electron"
+  ],
+  "author": "Multicam Media",
+  "license": "MIT",
+  "dependencies": {
+    "node-addon-api": "^7.0.0",
+    "node-gyp-build": "^4.8.0"
+  },
+  "devDependencies": {
+    "node-gyp": "^10.0.0",
+    "prebuildify": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "os": [
+    "win32",
+    "darwin",
+    "linux"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ]
+}
+

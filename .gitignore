@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+build/
+bin/
+
+# Don't ignore prebuilds - these are distributed
+# prebuilds/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
