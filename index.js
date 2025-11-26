@@ -6,21 +6,47 @@
  */
 
 const path = require('path');
+const fs = require('fs');
 
 let binding;
 
-try {
-  // Try to load using node-gyp-build (handles prebuilds and local builds)
-  binding = require('node-gyp-build')(path.join(__dirname));
-} catch (err) {
-  // Fallback: try to load from standard build location
+function tryLoad() {
+  const prebuildsDir = path.join(__dirname, 'prebuilds', `${process.platform}-${process.arch}`);
+  
+  // Try prebuild files (multiple naming conventions)
+  const prebuildFiles = [
+    path.join(prebuildsDir, '@aspect+xinput-napi.node'),
+    path.join(prebuildsDir, 'xinput-napi.node'),
+    path.join(prebuildsDir, 'xinput.node'),
+  ];
+  
+  for (const file of prebuildFiles) {
+    if (fs.existsSync(file)) {
+      return require(file);
+    }
+  }
+  
+  // Try node-gyp-build
   try {
-    binding = require('./build/Release/xinput.node');
-  } catch (err2) {
-    console.error('xinput-napi: Failed to load native module');
-    console.error('  Primary error:', err.message);
-    console.error('  Fallback error:', err2.message);
-    
+    return require('node-gyp-build')(path.join(__dirname));
+  } catch (e) {
+    // Continue to fallback
+  }
+  
+  // Try standard build location
+  const buildPath = path.join(__dirname, 'build', 'Release', 'xinput.node');
+  if (fs.existsSync(buildPath)) {
+    return require(buildPath);
+  }
+  
+  return null;
+}
+
+try {
+  binding = tryLoad();
+  
+  if (!binding) {
+    console.error('xinput-napi: No native module found');
     // Return stub module on failure
     binding = {
       getControllerState: () => ({ connected: false }),
@@ -30,6 +56,15 @@ try {
       getBatteryInfo: () => ({})
     };
   }
+} catch (err) {
+  console.error('xinput-napi: Failed to load native module:', err.message);
+  binding = {
+    getControllerState: () => ({ connected: false }),
+    getConnectedControllers: () => [],
+    setVibration: () => false,
+    isAvailable: () => false,
+    getBatteryInfo: () => ({})
+  };
 }
 
 module.exports = binding;
